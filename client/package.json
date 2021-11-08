@@ -3,7 +3,7 @@
   "version": "1.1.2",
   "private": true,
   "devDependencies": {
-    "@graphql-cli/codegen": "1.17.16",
+    "@graphql-codegen/cli": "^2.2.2",
     "@graphql-codegen/add": "2.0.2",
     "@graphql-codegen/typescript": "1.19.0",
     "@graphql-codegen/typescript-operations": "1.17.12",
@@ -25,7 +25,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "generate": "graphback generate && graphql codegen",
+    "generate": "graphback generate && graphql-codegen",
     "build:react": "react-scripts build",
     "eject:react": "react-scripts eject"
   },

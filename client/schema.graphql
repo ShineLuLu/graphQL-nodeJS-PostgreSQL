@@ -44,14 +44,12 @@ input CommentSubscriptionFilter {
 }
 
 input CreateCommentInput {
-  id: ID
   text: String
   description: String
   noteId: ID
 }
 
 input CreateNoteInput {
-  id: ID
   title: String!
   description: String
 }

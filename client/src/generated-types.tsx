@@ -3,6 +3,8 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -15,100 +17,83 @@ export type Scalars = {
 /**  @model  */
 export type Comment = {
   __typename?: 'Comment';
+  description?: Maybe<Scalars['String']>;
   /**  @id  */
   id: Scalars['ID'];
-  text?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
   /** @manyToOne(field: 'comments', key: 'noteId') */
   note?: Maybe<Note>;
+  text?: Maybe<Scalars['String']>;
 };
 
 export type CommentFilter = {
-  id?: Maybe<IdInput>;
-  text?: Maybe<StringInput>;
-  description?: Maybe<StringInput>;
-  noteId?: Maybe<IdInput>;
   and?: Maybe<Array<CommentFilter>>;
-  or?: Maybe<Array<CommentFilter>>;
+  description?: Maybe<StringInput>;
+  id?: Maybe<IdInput>;
   not?: Maybe<CommentFilter>;
+  noteId?: Maybe<IdInput>;
+  or?: Maybe<Array<CommentFilter>>;
+  text?: Maybe<StringInput>;
 };
 
 export type CommentResultList = {
   __typename?: 'CommentResultList';
-  items: Array<Maybe<Comment>>;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
   count?: Maybe<Scalars['Int']>;
+  items: Array<Maybe<Comment>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
 };
 
 export type CommentSubscriptionFilter = {
   and?: Maybe<Array<CommentSubscriptionFilter>>;
-  or?: Maybe<Array<CommentSubscriptionFilter>>;
-  not?: Maybe<CommentSubscriptionFilter>;
-  id?: Maybe<IdInput>;
-  text?: Maybe<StringInput>;
   description?: Maybe<StringInput>;
+  id?: Maybe<IdInput>;
+  not?: Maybe<CommentSubscriptionFilter>;
+  or?: Maybe<Array<CommentSubscriptionFilter>>;
+  text?: Maybe<StringInput>;
 };
 
 export type CreateCommentInput = {
-  id?: Maybe<Scalars['ID']>;
-  text?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   noteId?: Maybe<Scalars['ID']>;
+  text?: Maybe<Scalars['String']>;
 };
 
 export type CreateNoteInput = {
-  id?: Maybe<Scalars['ID']>;
-  title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
 };
 
 export type IdInput = {
-  ne?: Maybe<Scalars['ID']>;
   eq?: Maybe<Scalars['ID']>;
-  le?: Maybe<Scalars['ID']>;
-  lt?: Maybe<Scalars['ID']>;
   ge?: Maybe<Scalars['ID']>;
   gt?: Maybe<Scalars['ID']>;
   in?: Maybe<Array<Scalars['ID']>>;
+  le?: Maybe<Scalars['ID']>;
+  lt?: Maybe<Scalars['ID']>;
+  ne?: Maybe<Scalars['ID']>;
 };
 
 export type MutateCommentInput = {
-  id: Scalars['ID'];
-  text?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
   noteId?: Maybe<Scalars['ID']>;
+  text?: Maybe<Scalars['String']>;
 };
 
 export type MutateNoteInput = {
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   title?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createNote?: Maybe<Note>;
-  updateNote?: Maybe<Note>;
-  deleteNote?: Maybe<Note>;
   createComment?: Maybe<Comment>;
-  updateComment?: Maybe<Comment>;
+  createNote?: Maybe<Note>;
   deleteComment?: Maybe<Comment>;
-};
-
-
-export type MutationCreateNoteArgs = {
-  input: CreateNoteInput;
-};
-
-
-export type MutationUpdateNoteArgs = {
-  input: MutateNoteInput;
-};
-
-
-export type MutationDeleteNoteArgs = {
-  input: MutateNoteInput;
+  deleteNote?: Maybe<Note>;
+  updateComment?: Maybe<Comment>;
+  updateNote?: Maybe<Note>;
 };
 
 
@@ -117,8 +102,8 @@ export type MutationCreateCommentArgs = {
 };
 
 
-export type MutationUpdateCommentArgs = {
-  input: MutateCommentInput;
+export type MutationCreateNoteArgs = {
+  input: CreateNoteInput;
 };
 
 
@@ -126,18 +111,33 @@ export type MutationDeleteCommentArgs = {
   input: MutateCommentInput;
 };
 
+
+export type MutationDeleteNoteArgs = {
+  input: MutateNoteInput;
+};
+
+
+export type MutationUpdateCommentArgs = {
+  input: MutateCommentInput;
+};
+
+
+export type MutationUpdateNoteArgs = {
+  input: MutateNoteInput;
+};
+
 /**  @model  */
 export type Note = {
   __typename?: 'Note';
-  /**  @id  */
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
   /**
    * @oneToMany(field: 'note', key: 'noteId')
    * @oneToMany(field: 'note')
    */
   comments: Array<Maybe<Comment>>;
+  description?: Maybe<Scalars['String']>;
+  /**  @id  */
+  id: Scalars['ID'];
+  title: Scalars['String'];
 };
 
 
@@ -147,29 +147,29 @@ export type NoteCommentsArgs = {
 };
 
 export type NoteFilter = {
-  id?: Maybe<IdInput>;
-  title?: Maybe<StringInput>;
-  description?: Maybe<StringInput>;
   and?: Maybe<Array<NoteFilter>>;
-  or?: Maybe<Array<NoteFilter>>;
+  description?: Maybe<StringInput>;
+  id?: Maybe<IdInput>;
   not?: Maybe<NoteFilter>;
+  or?: Maybe<Array<NoteFilter>>;
+  title?: Maybe<StringInput>;
 };
 
 export type NoteResultList = {
   __typename?: 'NoteResultList';
-  items: Array<Maybe<Note>>;
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
   count?: Maybe<Scalars['Int']>;
+  items: Array<Maybe<Note>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
 };
 
 export type NoteSubscriptionFilter = {
   and?: Maybe<Array<NoteSubscriptionFilter>>;
-  or?: Maybe<Array<NoteSubscriptionFilter>>;
-  not?: Maybe<NoteSubscriptionFilter>;
-  id?: Maybe<IdInput>;
-  title?: Maybe<StringInput>;
   description?: Maybe<StringInput>;
+  id?: Maybe<IdInput>;
+  not?: Maybe<NoteSubscriptionFilter>;
+  or?: Maybe<Array<NoteSubscriptionFilter>>;
+  title?: Maybe<StringInput>;
 };
 
 export type OrderByInput = {
@@ -184,23 +184,25 @@ export type PageRequest = {
 
 export type Query = {
   __typename?: 'Query';
-  getDraftNotes?: Maybe<Array<Maybe<Note>>>;
-  getNote?: Maybe<Note>;
+  findComments: CommentResultList;
   findNotes: NoteResultList;
   getComment?: Maybe<Comment>;
-  findComments: CommentResultList;
+  getDraftNotes?: Maybe<Array<Maybe<Note>>>;
+  getNote?: Maybe<Note>;
 };
 
 
-export type QueryGetNoteArgs = {
-  id: Scalars['ID'];
+export type QueryFindCommentsArgs = {
+  filter?: Maybe<CommentFilter>;
+  orderBy?: Maybe<OrderByInput>;
+  page?: Maybe<PageRequest>;
 };
 
 
 export type QueryFindNotesArgs = {
   filter?: Maybe<NoteFilter>;
-  page?: Maybe<PageRequest>;
   orderBy?: Maybe<OrderByInput>;
+  page?: Maybe<PageRequest>;
 };
 
 
@@ -209,48 +211,41 @@ export type QueryGetCommentArgs = {
 };
 
 
-export type QueryFindCommentsArgs = {
-  filter?: Maybe<CommentFilter>;
-  page?: Maybe<PageRequest>;
-  orderBy?: Maybe<OrderByInput>;
+export type QueryGetNoteArgs = {
+  id: Scalars['ID'];
 };
 
 export enum SortDirectionEnum {
-  Desc = 'DESC',
-  Asc = 'ASC'
+  Asc = 'ASC',
+  Desc = 'DESC'
 }
 
 export type StringInput = {
-  ne?: Maybe<Scalars['String']>;
+  contains?: Maybe<Scalars['String']>;
+  endsWith?: Maybe<Scalars['String']>;
   eq?: Maybe<Scalars['String']>;
-  le?: Maybe<Scalars['String']>;
-  lt?: Maybe<Scalars['String']>;
   ge?: Maybe<Scalars['String']>;
   gt?: Maybe<Scalars['String']>;
   in?: Maybe<Array<Scalars['String']>>;
-  contains?: Maybe<Scalars['String']>;
+  le?: Maybe<Scalars['String']>;
+  lt?: Maybe<Scalars['String']>;
+  ne?: Maybe<Scalars['String']>;
   startsWith?: Maybe<Scalars['String']>;
-  endsWith?: Maybe<Scalars['String']>;
 };
 
 export type Subscription = {
   __typename?: 'Subscription';
-  newNote: Note;
-  updatedNote: Note;
+  deletedComment: Comment;
   deletedNote: Note;
   newComment: Comment;
+  newNote: Note;
   updatedComment: Comment;
-  deletedComment: Comment;
+  updatedNote: Note;
 };
 
 
-export type SubscriptionNewNoteArgs = {
-  filter?: Maybe<NoteSubscriptionFilter>;
-};
-
-
-export type SubscriptionUpdatedNoteArgs = {
-  filter?: Maybe<NoteSubscriptionFilter>;
+export type SubscriptionDeletedCommentArgs = {
+  filter?: Maybe<CommentSubscriptionFilter>;
 };
 
 
@@ -264,13 +259,18 @@ export type SubscriptionNewCommentArgs = {
 };
 
 
+export type SubscriptionNewNoteArgs = {
+  filter?: Maybe<NoteSubscriptionFilter>;
+};
+
+
 export type SubscriptionUpdatedCommentArgs = {
   filter?: Maybe<CommentSubscriptionFilter>;
 };
 
 
-export type SubscriptionDeletedCommentArgs = {
-  filter?: Maybe<CommentSubscriptionFilter>;
+export type SubscriptionUpdatedNoteArgs = {
+  filter?: Maybe<NoteSubscriptionFilter>;
 };
 
 export type GetDraftNotesQueryVariables = Exact<{ [key: string]: never; }>;
@@ -666,7 +666,7 @@ export const GetNoteDocument = gql`
  *   },
  * });
  */
-export function useGetNoteQuery(baseOptions?: Apollo.QueryHookOptions<GetNoteQuery, GetNoteQueryVariables>) {
+export function useGetNoteQuery(baseOptions: Apollo.QueryHookOptions<GetNoteQuery, GetNoteQueryVariables>) {
         return Apollo.useQuery<GetNoteQuery, GetNoteQueryVariables>(GetNoteDocument, baseOptions);
       }
 export function useGetNoteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNoteQuery, GetNoteQueryVariables>) {
@@ -739,7 +739,7 @@ export const GetCommentDocument = gql`
  *   },
  * });
  */
-export function useGetCommentQuery(baseOptions?: Apollo.QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
+export function useGetCommentQuery(baseOptions: Apollo.QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
         return Apollo.useQuery<GetCommentQuery, GetCommentQueryVariables>(GetCommentDocument, baseOptions);
       }
 export function useGetCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
